@@ -65,6 +65,27 @@ public class GUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
 
+        String[] columns = {"Username","Score"};
+
+        // Table model allows dynamic updates
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+
+        // JTable using the model
+        JTable table = new JTable(tableModel);
+
+        // Scroll pane for the table
+        JScrollPane tscrollPane = new JScrollPane(table);
+        tscrollPane.setBounds(1600, 100, 200, 500);
+        frame.add(tscrollPane);
+
+        int i=0;
+        String username = JOptionPane.showInputDialog(null,
+                "Enter your username:", // Message
+                "Login",               // Dialog title
+                JOptionPane.QUESTION_MESSAGE);
+
+        tableModel.addRow(new Object[]{username,i});
+
         JLabel clabel = new JLabel("Canvas");
         clabel.setBounds(100, 70, 100, 30);
         frame.add(clabel);
@@ -97,32 +118,13 @@ public class GUI {
         ActionListener sendAction = e -> {
             String text = chatInput.getText();
             System.out.println(text);
-            chatArea.append(text + "\n");
+            chatArea.append(username+": "+text + "\n");
             chatInput.setText("");
         };
         button.addActionListener(sendAction);
         chatInput.addActionListener(sendAction);
 
-        String[] columns = {"Username","Score"};
 
-        // Table model allows dynamic updates
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
-
-        // JTable using the model
-        JTable table = new JTable(tableModel);
-
-        // Scroll pane for the table
-        JScrollPane tscrollPane = new JScrollPane(table);
-        tscrollPane.setBounds(1600, 100, 200, 500);
-        frame.add(tscrollPane);
-
-        int i=0;
-        String username = JOptionPane.showInputDialog(null,
-                "Enter your username:", // Message
-                "Login",               // Dialog title
-                JOptionPane.QUESTION_MESSAGE);
-
-        tableModel.addRow(new Object[]{username,i});
 
         frame.add(scrollPane);
         frame.add(chatInput);
