@@ -3,6 +3,7 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 class DrawPanel extends JPanel {
@@ -58,7 +59,8 @@ class DrawPanel extends JPanel {
 
 //--------------------------------------------//
 public class GUI {
-    Client client =  new Client();
+    Client client ;
+    private JTextArea chatArea;
     GUI(Client client){
         JFrame frame = new JFrame("Chat Window");
         frame.setSize(1920, 1080);
@@ -104,7 +106,7 @@ public class GUI {
         blabel.setBounds(100, 670, 100, 30);
         frame.add(blabel);
 
-        JTextArea chatArea = new JTextArea();
+         chatArea = new JTextArea();
         chatArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(chatArea);
         scrollPane.setBounds(100, 700, 1400, 200);
@@ -116,11 +118,16 @@ public class GUI {
         button.setBounds(1400, 900, 100, 30);
 
         ActionListener sendAction = e -> {
-            String text = chatInput.getText();
-            System.out.println(text);
-            chatArea.append(username+": "+text + "\n");
-            chatInput.setText("");
+            String text = chatInput.getText().trim();
+            if (!text.isEmpty()) {
+                // Show locally
+                //chatArea.append(username + ": " + text + "\n");
+                // Send to server
+                client.sendMessage(username + ": " + text);
+                chatInput.setText("");
+            }
         };
+
         button.addActionListener(sendAction);
         chatInput.addActionListener(sendAction);
 
@@ -130,5 +137,10 @@ public class GUI {
         frame.add(chatInput);
         frame.add(button);
         frame.setVisible(true);
+    }
+    public void addMessage(String message) {
+        SwingUtilities.invokeLater(() -> {
+            chatArea.append(message + "\n");
+        });
     }
 }
